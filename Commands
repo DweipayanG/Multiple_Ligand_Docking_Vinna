@@ -1,0 +1,68 @@
+----INSTALL UBUNTU-----
+UPGRADE AND UPDATE LIBRARIES OF UBUNTU BY FOLLOWING COMMANDS
+
+Commands:
+sudo apt update
+sudo apt upgrade
+sudo apt install gcc
+sudo apt install cmake
+sudo apt install build-essential
+sudo apt install libfftw3-dev OR
+sudo apt-get install -y libfftw3-dev
+----------------------------------
+
+# install Openbabel 
+
+sudo apt install openbabel 
+
+# install Vinna 
+
+sudo apt install autodock-vina
+
+#-------------------------------------#
+#STEPS FOR MULTIPLE LIGANDS DOCKING 
+
+# First you need to perform docking in UCSF-Chimera, with any one ligand, once this is done, you can use the output "docking.receptor.pdbqt" file for following steps.  
+
+#Place the docking.receptor.pdbqt or file having the name like "xxxx.receptor.pdbqt" in to a new folder (working directory), note: this file will be generated previously while performing docking in UCSF-Chimera. 
+
+# rename this file as simply "receptor.pdbqt"
+
+# place the files "conf.txt" and pearl script "Vina_linux.pl" in the working directory (You will find this files from github)
+
+# At this point you will have following files in the working directory: (1) receptor.pdbqt, (2)conf.txt, (3)Vina_linux.pl and (4) ligand multiple files or single file with multiple ligands in sdf format.
+
+# open and edit "conf.txt" to enter the position coordinates for X, Y and Z previously noted down while making docking grid in UCSF-Chimera and also entetr the size of the grid box.   
+
+ 
+# If you have single sdf file with multiple ligands here and run following command, and if you have multiple ligands seperately in sdf format in working folder skip this step, 
+
+obabel -isdf 100.sdf -osdf -O *.sdf --split 
+
+# Minimization of ligands 
+
+obminimize
+
+obminimize -ff MMFF94 -n 1000 *.sdf
+
+#convert ligands in sdf to pdbqt format 
+
+obabel -isdf *.sdf -opdbqt -O*.pdbqt 
+#Once this step is done, delet the sdf files of ligands from the working folder. 
+
+# Make ligand text file for info. 
+ls > ligand.txt 
+
+# Open ligand.txt and delet all other lines other than ligand names. 
+
+# Run the perl script for docking, here you should have "receptor.pdbqt" file from chimera or anwhere which is optimized and minimized. 
+
+perl Vina_linux.pl
+  ligand.txt 
+
+# To prepare result table 
+
+tail -n11 *.log>results.txt  
+
+# prepare protein ligand complex in chimera, for this open naked protein in CCSF Chimera, then open the output pdbqt file of ligand of your wish/need from Tools>Structure/Binding Analysis > ViewDock
+# Save the appropriate pose using File > Save PDB > input file name , choose protein and pose of choice by pressing ctrl select> choose "a single file" under  "Save multiple models in" and lastly press Save. 
