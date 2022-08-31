@@ -48,9 +48,10 @@ obminimize -ff MMFF94 -n 1000 *.sdf
 #convert ligands in sdf to pdbqt format 
 
 obabel -isdf *.sdf -opdbqt -O*.pdbqt 
-#Once this step is done, delet the sdf files of ligands from the working folder. 
+   #Once this step is done, delet the sdf files of ligands from the working folder. 
 
 # Make ligand text file for info. 
+
 ls > ligand.txt 
 
 # Open ligand.txt and delet all other lines other than ligand names. 
@@ -59,7 +60,7 @@ ls > ligand.txt
 
 perl Vina_linux.pl
   ligand.txt 
-
+        #If you get error in terms of "--log" then delet open the pearl script and delet the following "--log @arr_file[$i]_log.log" in the last line of the script.
 # To prepare result table 
 
 tail -n11 *.log>results.txt  
